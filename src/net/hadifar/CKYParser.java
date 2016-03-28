@@ -28,6 +28,7 @@ public class CKYParser {
 
     /**
      * 문법 추가
+     *
      * @param rules
      */
     public void setGrammar(ArrayList<String> rules) {
@@ -52,14 +53,14 @@ public class CKYParser {
     public void initChart() {
         // init chart
         mChart = new Cell[n][];
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             mChart[i] = new Cell[n];
-            for (int j=i; j<n; j++) {
+            for (int j = i; j < n; j++) {
                 mChart[i][j] = new Cell();
             }
         }
 
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             initCell(i);
         }
     }
@@ -83,15 +84,15 @@ public class CKYParser {
      * chart - Cell[y][x]
      */
     public void fillChart() {
-        for (int j=1; j<n; j++) {
-            for (int i=0; i<n-j; i++) {
-                fillCell(i, i+j);
+        for (int j = 1; j < n; j++) {
+            for (int i = 0; i < n - j; i++) {
+                fillCell(i, i + j);
             }
         }
     }
 
     private void fillCell(int i, int j) {
-        for (int k=i; k<j; k++) {
+        for (int k = i; k < j; k++) {
             combineCells(i, k, j);
         }
     }
@@ -103,14 +104,14 @@ public class CKYParser {
         // find Y in cell[i][k]
         for (Cell c1 : entries1) {
 
-            Cell cell2 = mChart[k+1][j];
+            Cell cell2 = mChart[k + 1][j];
             ArrayList<Cell> entries2 = cell2.getEntries();
 
             // find Z in cell[k+1][j]
             for (Cell c2 : entries2) {
 
                 // find X in Nonterminal rules
-                System.out.println("find: "+c1.pname+" + "+c2.pname);
+                System.out.println("find: " + c1.pname + " + " + c2.pname);
                 Cell newCell = ntrulesInst.checkRule(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
@@ -125,12 +126,12 @@ public class CKYParser {
     public void printChart() {
 
         System.out.println("\n-- Recognition Chart --");
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<n; j++) {
-                if (j<i) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (j < i) {
                     System.out.print("\t");
                 } else {
-                    System.out.print(mChart[i][j].toString()+"\t");
+                    System.out.print(mChart[i][j].toString() + "\t");
                 }
             }
             System.out.println();
@@ -139,12 +140,12 @@ public class CKYParser {
     }
 
     public void printSolution() {
-        Cell fin = mChart[0][n-1];
+        Cell fin = mChart[0][n - 1];
         fin.printSolution();
     }
 
     public void getSolution(StringBuffer sb) {
-        Cell fin = mChart[0][n-1];
+        Cell fin = mChart[0][n - 1];
         fin.getSolution(sb);
     }
 }
