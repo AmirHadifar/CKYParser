@@ -1,0 +1,2 @@
+(S(NP We)(VP(V eat)(NP(NP sushi)(PP(P with)(NP tuna)))))
+(S(NP We)(VP(VP(V eat)(NP sushi))(PP(P with)(NP tuna))))

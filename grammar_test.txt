@@ -1,0 +1,10 @@
+S -> NP VP
+VP -> V NP
+VP -> VP PP
+NP -> NP PP
+PP -> P NP
+V -> eat
+NP -> We
+NP -> sushi
+NP -> tuna
+P -> with
