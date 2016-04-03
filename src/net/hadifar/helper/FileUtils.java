@@ -11,6 +11,12 @@ import java.util.ArrayList;
  */
 public class FileUtils {
 
+    /**
+     * read input text from file (e.g input.txt)
+     *
+     * @param fileNm
+     * @return
+     */
     public static ArrayList<String> readFile(String fileNm) {
         ArrayList<String> lines = null;
 
@@ -45,6 +51,12 @@ public class FileUtils {
         return lines;
     }
 
+    /**
+     * write output text to file (e.g output.txt)
+     *
+     * @param fileNm
+     * @param text
+     */
     public static void WriteFile(String fileNm, String text) {
         FileWriter fw = null;
         BufferedWriter bw = null;

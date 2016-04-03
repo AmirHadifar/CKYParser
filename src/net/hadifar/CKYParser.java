@@ -14,83 +14,130 @@ public class CKYParser {
     private String[] mWords = null;
     private Cell[][] mChart = null;
 
-    private NonTerminalRules nonTerminalRules = null;
-    private TerminalRules terminalRules = null;
+    private NonTerminalRules mNonTerminalRules = null;
+    private TerminalRules mTerminalRules = null;
 
-    private int tokens = 0;
+    private int mWordTokens = 0;
 
 
     /**
      * default constructor for CKYParser
-     * pass input sentence for splitting it to arrays of String
+     * initialized terminal & non-terminals Objects
+     */
+    public CKYParser() {
+        mNonTerminalRules = new NonTerminalRules();
+        mTerminalRules = new TerminalRules();
+    }
+
+    /**
+     * Pass input sentence for splitting it to arrays of String
+     * number of words also set to mWordTokens
+     *
      * @param sentence
      */
-    public CKYParser(String sentence) {
+    public void setSentence(String sentence) {
         this.mWords = sentence.split("\\s");
-        tokens = this.mWords.length;
+        mWordTokens = this.mWords.length;
     }
 
 
-    public void setGrammar(ArrayList<String> rules) {
-        nonTerminalRules = new NonTerminalRules();
-        terminalRules = new TerminalRules();
+    /**
+     * build grammar with two ArrayList of terminal and non-terminal
+     * set result to mTerminalRules & mNonTerminalRules objects
+     *
+     * @param terminals
+     * @param nonTerminals
+     */
+    public void buildGrammar(ArrayList<String> terminals, ArrayList<String> nonTerminals) {
 
-        for (String rule : rules) {
-            String[] elms = rule.split("\\s");
-            if (elms.length < 3) {
-                continue;
-            } else if (elms.length == 3) {
-                terminalRules.addRule(elms);
-            } else {
-                nonTerminalRules.addRule(elms);
-            }
+        for (String terminalRule : terminals) {
+            String[] splitWords = terminalRule.split("\\s");
+            mTerminalRules.addRule(splitWords);
+        }
+
+        for (String nonTerminalRule : nonTerminals) {
+            String[] splitWords = nonTerminalRule.split("\\s");
+            mNonTerminalRules.addRule(splitWords);
+
         }
     }
 
 
+    /**
+     * initializing table/chart of CKYParser with following structure
+     * <p>
+     * $$$$$$
+     * $$$$$
+     * $$$$
+     * $$$
+     * $$
+     * $
+     */
     public void initChart() {
-        // init chart
-        mChart = new Cell[tokens][];
-        for (int i = 0; i < tokens; i++) {
-            mChart[i] = new Cell[tokens];
-            for (int j = i; j < tokens; j++) {
+
+        mChart = new Cell[mWordTokens][];
+
+        for (int i = 0; i < mWordTokens; i++) {
+
+            mChart[i] = new Cell[mWordTokens];
+
+            for (int j = i; j < mWordTokens; j++) {
                 mChart[i][j] = new Cell();
             }
         }
 
-        for (int i = 0; i < tokens; i++) {
-            initCell(i);
-        }
+        initCell();
     }
 
-    private void initCell(int i) {
-        String word = mWords[i];
-        ArrayList<Cell> lexs = terminalRules.lexicalize(word);
-        // 품사추가
-        for (Cell lex : lexs) {
-            addToCell(mChart[i][i], lex, null, null);
+    /**
+     * initialize entries of table/chart with words of sentence
+     */
+    private void initCell() {
+
+        for (int i = 0; i < mWordTokens; i++) {
+
+            String word = mWords[i];
+
+            ArrayList<Cell> lexList = mTerminalRules.lexicalize(word);
+            for (Cell lex : lexList) {
+                addToCell(mChart[i][i], lex, null, null);
+            }
         }
+
     }
 
+    /**
+     * add cell ( terminal-rule ) to  table
+     *
+     * @param parent
+     * @param cell
+     * @param left
+     * @param right
+     */
     private void addToCell(Cell parent, Cell cell, Cell left, Cell right) {
         parent.addEntry(cell, left, right);
     }
 
+    /**
+     * A->BC
+     * <p>
+     * If there is an A somewhere in the input, then there must be a B followed by a C in the input
+     * If the A spans from i to j in the input,then there must be a k such that i <k <j
+     */
     public void fillChart() {
-        for (int j = 1; j < tokens; j++) {
-            for (int i = 0; i < tokens - j; i++) {
-                fillCell(i, i + j);
+
+        for (int i = 1; i < mWordTokens; i++) {
+            for (int j = 0; j < mWordTokens - i; j++) {
+                for (int k = j; k < i; k++) {
+                    combineCells(i, k, j);
+                }
             }
         }
+
     }
 
-    private void fillCell(int i, int j) {
-        for (int k = i; k < j; k++) {
-            combineCells(i, k, j);
-        }
-    }
+    private void combineCells(int j, int k, int i) {
 
-    private void combineCells(int i, int k, int j) {
         Cell cell1 = mChart[i][k];
         ArrayList<Cell> entries1 = cell1.getEntries();
 
@@ -105,7 +152,7 @@ public class CKYParser {
 
                 // find X in Nonterminal rules
                 System.out.println("find: " + c1.pname + " + " + c2.pname);
-                Cell newCell = nonTerminalRules.checkRule(c1, c2);
+                Cell newCell = mNonTerminalRules.checkRule(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
                     // match
@@ -119,8 +166,8 @@ public class CKYParser {
     public void printChart() {
 
         System.out.println("\n-- Recognition Chart --");
-        for (int i = 0; i < tokens; i++) {
-            for (int j = 0; j < tokens; j++) {
+        for (int i = 0; i < mWordTokens; i++) {
+            for (int j = 0; j < mWordTokens; j++) {
                 if (j < i) {
                     System.out.print("\t");
                 } else {
@@ -131,14 +178,14 @@ public class CKYParser {
         }
 
     }
-
-    public void printSolution() {
-        Cell fin = mChart[0][tokens - 1];
-        fin.printSolution();
-    }
+//
+//    public void printSolution() {
+//        Cell fin = mChart[0][mWordTokens - 1];
+//        fin.printSolution();
+//    }
 
     public void getSolution(StringBuffer sb) {
-        Cell fin = mChart[0][tokens - 1];
+        Cell fin = mChart[0][mWordTokens - 1];
         fin.getSolution(sb);
     }
 }

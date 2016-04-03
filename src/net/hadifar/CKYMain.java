@@ -16,17 +16,18 @@ public class CKYMain {
     public static void main(String args[]) {
 
 
-        ArrayList<String> inputSentence = FileUtils.readFile("input2.txt");
-        ArrayList<String> grammar = FileUtils.readFile("grammar_test.txt");
+        ArrayList<String> inputSentence = FileUtils.readFile("input.txt");
 
-        // String sentence = Main.readStringFromFile("input.txt");
-        // ArrayList<String> grammar = Main.readFile("grammar.txt");
+        ArrayList<String> terminalRules = FileUtils.readFile("T-Rules.txt");
+        ArrayList<String> nonTerminalRules = FileUtils.readFile("NT-Rules.txt");
+
+        CKYParser parser = new CKYParser();
+        parser.buildGrammar(terminalRules, nonTerminalRules);
 
 
         for (String sentence : inputSentence) {
 
-            CKYParser parser = new CKYParser(sentence);
-            parser.setGrammar(grammar);
+            parser.setSentence(sentence);
 
             parser.initChart();
             parser.fillChart();
@@ -35,7 +36,7 @@ public class CKYMain {
             StringBuffer sb = new StringBuffer();
             parser.getSolution(sb);
             System.out.println(sb.toString());
-            FileUtils.WriteFile("output.txt", sb.toString());
+//            FileUtils.WriteFile("output.txt", sb.toString());
         }
     }
 }

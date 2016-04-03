@@ -11,37 +11,38 @@ import java.util.ArrayList;
 
 public class TerminalRules {
 
-    public ArrayList<TRule> trules = null;
+    public ArrayList<TRule> mTRules = null;
 
     public TerminalRules() {
-        trules = new ArrayList<TRule>();
+        mTRules = new ArrayList<TRule>();
     }
 
     public void addRule(String[] elements) {
-        trules.add(TRule.makeRule(elements));
+        mTRules.add(TRule.makeRule(elements));
     }
 
     static class TRule {
 
-        public String lhs = null;
-        public String rhs = null;
+        String leftHandSide = null;
+        String rightHandSide = null;
+        double probability = 0;
 
-        private TRule() {
-        }
+        private TRule() {}
 
         public static TRule makeRule(String[] elements) {
             TRule rule = new TRule();
-            rule.lhs = elements[0];
-            rule.rhs = elements[2];
+            rule.probability = Double.parseDouble(elements[0]);
+            rule.leftHandSide = elements[1];
+            rule.rightHandSide = elements[2];
             return rule;
         }
 
         @Override
         public String toString() {
             StringBuffer ret = new StringBuffer();
-            ret.append(lhs);
+            ret.append(leftHandSide);
             ret.append(" >> ");
-            ret.append(rhs);
+            ret.append(rightHandSide);
             return ret.toString();
         }
     }
@@ -50,21 +51,17 @@ public class TerminalRules {
     public ArrayList<Cell> lexicalize(String word) {
 
         ArrayList<Cell> lexs = new ArrayList<Cell>();
-        for (TRule trule : trules) {
-            if (trule.rhs.equals(word)) {
+
+        for (TRule trule : mTRules) {
+
+            if (trule.rightHandSide.equals(word)) {
                 Cell lex = new Cell();
-                lex.name = trule.rhs;
-                lex.pname = trule.lhs;
+                lex.name = trule.rightHandSide;
+                lex.pname = trule.leftHandSide;
                 lexs.add(lex);
             }
         }
         return lexs;
     }
 
-//    public void printRules() {
-//        System.out.println("-- Terminal Rules --");
-//        for (TRule rule : trules) {
-//            System.out.println(rule.toString());
-//        }
-//    }
 }

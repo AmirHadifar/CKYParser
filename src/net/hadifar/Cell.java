@@ -29,17 +29,16 @@ public class Cell {
         cell.left = left;
         cell.right = right;
         entries.add(cell);
-//		addUnique(cell);
     }
-
-    private void addUnique(Cell cell) {
-        for (Cell c : entries) {
-            if (c.pname.equals(cell.pname)) {
-                return;
-            }
-        }
-        entries.add(cell);
-    }
+//
+//    private void addUnique(Cell cell) {
+//        for (Cell c : entries) {
+//            if (c.pname.equals(cell.pname)) {
+//                return;
+//            }
+//        }
+//        entries.add(cell);
+//    }
 
     public ArrayList<Cell> getEntries() {
         return entries;
