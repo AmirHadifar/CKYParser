@@ -18,11 +18,6 @@ public class NonTerminalRules {
         ntrules = new ArrayList<NTRule>();
     }
 
-    /**
-     * grammar rule 추가
-     *
-     * @param elements
-     */
     public void addRule(String[] elements) {
         ntrules.add(NTRule.makeRule(elements));
     }
@@ -46,14 +41,7 @@ public class NonTerminalRules {
             return rule;
         }
 
-        /**
-         * non terminal rule을 standard form 으로 변환시 사용
-         *
-         * @param lhs
-         * @param rhs1
-         * @param rhs2
-         * @return
-         */
+
         public static NTRule makeRule(String lhs, String rhs1, String rhs2) {
             NTRule rule = new NTRule();
             rule.lhs = lhs;
@@ -87,11 +75,11 @@ public class NonTerminalRules {
         return null;
     }
 
-    public void printRules() {
-        System.out.println("-- Non Terminal Rules --");
-        for (NTRule rule : ntrules) {
-            System.out.println(rule.toString());
-        }
-    }
+//    public void printRules() {
+//        System.out.println("-- Non Terminal Rules --");
+//        for (NTRule rule : ntrules) {
+//            System.out.println(rule.toString());
+//        }
+//    }
 }
 

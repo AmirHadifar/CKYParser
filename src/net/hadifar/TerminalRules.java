@@ -46,11 +46,7 @@ public class TerminalRules {
         }
     }
 
-    /**
-     * word에 해당하는 품사를 모두 추가.
-     *
-     * @param word
-     */
+
     public ArrayList<Cell> lexicalize(String word) {
 
         ArrayList<Cell> lexs = new ArrayList<Cell>();
@@ -65,10 +61,10 @@ public class TerminalRules {
         return lexs;
     }
 
-    public void printRules() {
-        System.out.println("-- Terminal Rules --");
-        for (TRule rule : trules) {
-            System.out.println(rule.toString());
-        }
-    }
+//    public void printRules() {
+//        System.out.println("-- Terminal Rules --");
+//        for (TRule rule : trules) {
+//            System.out.println(rule.toString());
+//        }
+//    }
 }
