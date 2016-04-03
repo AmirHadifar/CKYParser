@@ -66,6 +66,7 @@ public class CKYParser {
     /**
      * initializing table/chart of CKYParser with following structure
      * <p>
+     * sentence : $$$$$$
      * $$$$$$
      * $$$$$
      * $$$$
@@ -98,7 +99,7 @@ public class CKYParser {
 
             String word = mWords[i];
 
-            ArrayList<Cell> lexList = mTerminalRules.lexicalize(word);
+            ArrayList<Cell> lexList = mTerminalRules.createLexical(word);
             for (Cell lex : lexList) {
                 addToCell(mChart[i][i], lex, null, null);
             }
@@ -107,7 +108,7 @@ public class CKYParser {
     }
 
     /**
-     * add cell ( terminal-rule ) to  table
+     * add cell ( terminal-rule ) to  table/chart
      *
      * @param parent
      * @param cell
@@ -118,30 +119,29 @@ public class CKYParser {
         parent.addEntry(cell, left, right);
     }
 
-    /**
-     * A->BC
-     * <p>
-     * If there is an A somewhere in the input, then there must be a B followed by a C in the input
-     * If the A spans from i to j in the input,then there must be a k such that i <k <j
-     */
     public void fillChart() {
 
-        for (int i = 1; i < mWordTokens; i++) {
-            for (int j = 0; j < mWordTokens - i; j++) {
-                for (int k = j; k < i; k++) {
-                    combineCells(i, k, j);
+
+        for (int length = 1; length < mWordTokens; length++) {
+
+            for (int i = 0; i < mWordTokens - length; i++) {
+
+                for (int k = i; k < i + length; k++) {
+                    combineCells(i, k, i + length);
                 }
             }
         }
-
     }
 
-    private void combineCells(int j, int k, int i) {
+
+    private void combineCells(int i, int k, int j) {
+
+        // from i to k && k+1 to j
 
         Cell cell1 = mChart[i][k];
         ArrayList<Cell> entries1 = cell1.getEntries();
 
-        // find Y in cell[i][k]
+
         for (Cell c1 : entries1) {
 
             Cell cell2 = mChart[k + 1][j];
@@ -151,8 +151,7 @@ public class CKYParser {
             for (Cell c2 : entries2) {
 
                 // find X in Nonterminal rules
-                System.out.println("find: " + c1.pname + " + " + c2.pname);
-                Cell newCell = mNonTerminalRules.checkRule(c1, c2);
+                Cell newCell = mNonTerminalRules.createLexical(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
                     // match
@@ -161,6 +160,9 @@ public class CKYParser {
                 }
             }
         }
+
+
+
     }
 
     public void printChart() {

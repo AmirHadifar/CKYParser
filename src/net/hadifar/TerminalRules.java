@@ -48,16 +48,16 @@ public class TerminalRules {
     }
 
 
-    public ArrayList<Cell> lexicalize(String word) {
+    public ArrayList<Cell> createLexical(String word) {
 
         ArrayList<Cell> lexs = new ArrayList<Cell>();
 
-        for (TRule trule : mTRules) {
+        for (TRule rule : mTRules) {
 
-            if (trule.rightHandSide.equals(word)) {
+            if (rule.rightHandSide.equals(word)) {
                 Cell lex = new Cell();
-                lex.name = trule.rightHandSide;
-                lex.pname = trule.leftHandSide;
+                lex.name = rule.rightHandSide;
+                lex.pname = rule.leftHandSide;
                 lexs.add(lex);
             }
         }

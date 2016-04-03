@@ -64,12 +64,13 @@ public class NonTerminalRules {
         }
     }
 
-    public Cell checkRule(Cell c1, Cell c2) {
+    public Cell createLexical(Cell c1, Cell c2) {
         for (NTRule rule : mNTRules) {
             if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.size() == 1) {
                 Cell cell = new Cell();
                 cell.pname = rule.leftHandSide;
-                return cell;
+                c1.addEntry(cell, null, null);
+                return null;
             } else if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.get(1).equals(c2.pname)) {
                 // matched rule
                 Cell cell = new Cell();
