@@ -30,7 +30,9 @@ public class CKYMain {
             parser.setSentence(sentence);
 
             parser.initChart();
+
             parser.fillChart();
+
             parser.printChart();
 
             StringBuffer sb = new StringBuffer();

@@ -43,15 +43,6 @@ public class NonTerminalRules {
             return rule;
         }
 
-
-//        public static NTRule makeRule(String lhs, String rhs1, String rhs2) {
-//            NTRule rule = new NTRule();
-//            rule.leftHandSide = lhs;
-//            rule.rightHandSide.add(rhs1);
-//            rule.rightHandSide.add(rhs2);
-//            return rule;
-//        }
-
         @Override
         public String toString() {
             StringBuffer ret = new StringBuffer();
@@ -64,14 +55,9 @@ public class NonTerminalRules {
         }
     }
 
-    public Cell createLexical(Cell c1, Cell c2) {
+    public Cell createUnaryLexical(Cell c1) {
         for (NTRule rule : mNTRules) {
             if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.size() == 1) {
-                Cell cell = new Cell();
-                cell.pname = rule.leftHandSide;
-                c1.addEntry(cell, null, null);
-                return null;
-            } else if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.get(1).equals(c2.pname)) {
                 // matched rule
                 Cell cell = new Cell();
                 cell.pname = rule.leftHandSide;
@@ -81,11 +67,17 @@ public class NonTerminalRules {
         return null;
     }
 
-//    public void printRules() {
-//        System.out.println("-- Non Terminal Rules --");
-//        for (NTRule rule : mNTRules) {
-//            System.out.println(rule.toString());
-//        }
-//    }
+    public Cell createBinaryLexical(Cell c1, Cell c2) {
+        for (NTRule rule : mNTRules) {
+            if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.size() > 1 && rule.rightHandSide.get(1).equals(c2.pname)) {
+                // matched rule
+                Cell cell = new Cell();
+                cell.pname = rule.leftHandSide;
+                return cell;
+            }
+        }
+        return null;
+    }
+
 }
 

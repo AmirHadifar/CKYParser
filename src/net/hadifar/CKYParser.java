@@ -36,7 +36,7 @@ public class CKYParser {
      * @param sentence
      */
     public void setSentence(String sentence) {
-        this.mWords = sentence.split("\\s");
+        mWords = sentence.split("\\s");
         mWordTokens = this.mWords.length;
     }
 
@@ -101,26 +101,14 @@ public class CKYParser {
 
             ArrayList<Cell> lexList = mTerminalRules.createLexical(word);
             for (Cell lex : lexList) {
-                addToCell(mChart[i][i], lex, null, null);
+                mChart[i][i].addEntry(lex, null, null);
             }
         }
 
-    }
 
-    /**
-     * add cell ( terminal-rule ) to  table/chart
-     *
-     * @param parent
-     * @param cell
-     * @param left
-     * @param right
-     */
-    private void addToCell(Cell parent, Cell cell, Cell left, Cell right) {
-        parent.addEntry(cell, left, right);
     }
 
     public void fillChart() {
-
 
         for (int length = 1; length < mWordTokens; length++) {
 
@@ -151,7 +139,7 @@ public class CKYParser {
             for (Cell c2 : entries2) {
 
                 // find X in Nonterminal rules
-                Cell newCell = mNonTerminalRules.createLexical(c1, c2);
+                Cell newCell = mNonTerminalRules.createBinaryLexical(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
                     // match
@@ -161,6 +149,7 @@ public class CKYParser {
             }
         }
 
+        //TODO:check unary rules
 
 
     }

@@ -53,7 +53,6 @@ public class TerminalRules {
         ArrayList<Cell> lexs = new ArrayList<Cell>();
 
         for (TRule rule : mTRules) {
-
             if (rule.rightHandSide.equals(word)) {
                 Cell lex = new Cell();
                 lex.name = rule.rightHandSide;
