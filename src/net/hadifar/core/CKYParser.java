@@ -1,4 +1,4 @@
-package net.hadifar;
+package net.hadifar.core;
 
 /**
  * Created by Amir on 3/28/2016 AD
@@ -58,8 +58,39 @@ public class CKYParser {
         for (String nonTerminalRule : nonTerminals) {
             String[] splitWords = nonTerminalRule.split("\\s");
             mNonTerminalRules.addRule(splitWords);
-
         }
+
+        CFG2CNF(mTerminalRules, mNonTerminalRules);
+
+    }
+
+    /**
+     * Convert Context-free-grammar to Chomsky-normal-form
+     * Just remove Union rules
+     */
+    private void CFG2CNF(TerminalRules mTerminalRules, NonTerminalRules mNonTerminalRules) {
+
+        //new rules which added to terminals
+        ArrayList<TerminalRules.TRule> newAddedRule = new ArrayList<>();
+        ArrayList<NonTerminalRules.NTRule> newDeleteRule = new ArrayList<>();
+
+        //iterate through non-terminals to find union-Rules
+        for (NonTerminalRules.NTRule nRule : mNonTerminalRules.mNTRules) {
+            //find union
+            if (nRule.rightHandSide.size() == 1) {
+                //replace all variant of rule with Terminals and added to newAddedRule
+                for (TerminalRules.TRule tRule : mTerminalRules.mTRules) {
+                    if (nRule.rightHandSide.get(0).equals(tRule.leftHandSide))
+                        newAddedRule.add(TerminalRules.TRule.makeRule(new String[]{"" + nRule.probability * tRule.probability, nRule.leftHandSide, tRule.rightHandSide}));
+                }
+                //new delete rule added to deleted list
+                newDeleteRule.add(nRule);
+            }
+        }
+
+        //Union deleted && new Rules added
+        mTerminalRules.mTRules.addAll(newAddedRule);
+        mNonTerminalRules.mNTRules.removeAll(newDeleteRule);
     }
 
 
@@ -124,12 +155,10 @@ public class CKYParser {
 
     private void combineCells(int i, int k, int j) {
 
-        // from i to k && k+1 to j
-
         Cell cell1 = mChart[i][k];
         ArrayList<Cell> entries1 = cell1.getEntries();
 
-
+        // find Y in cell[i][k]
         for (Cell c1 : entries1) {
 
             Cell cell2 = mChart[k + 1][j];
@@ -142,6 +171,8 @@ public class CKYParser {
                 Cell newCell = mNonTerminalRules.createBinaryLexical(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
+                    System.out.println("find: " + c1.pname + " + " + c2.pname);
+
                     // match
                     // addToCell(cell[i][j], X, Y, Z)
                     mChart[i][j].addEntry(newCell, c1, c2);
@@ -149,14 +180,12 @@ public class CKYParser {
             }
         }
 
-        //TODO:check unary rules
-
-
     }
 
     public void printChart() {
 
         System.out.println("\n-- Recognition Chart --");
+
         for (int i = 0; i < mWordTokens; i++) {
             for (int j = 0; j < mWordTokens; j++) {
                 if (j < i) {
@@ -169,11 +198,6 @@ public class CKYParser {
         }
 
     }
-//
-//    public void printSolution() {
-//        Cell fin = mChart[0][mWordTokens - 1];
-//        fin.printSolution();
-//    }
 
     public void getSolution(StringBuffer sb) {
         Cell fin = mChart[0][mWordTokens - 1];

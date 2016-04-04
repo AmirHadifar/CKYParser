@@ -1,4 +1,4 @@
-package net.hadifar;
+package net.hadifar.core;
 
 /**
  * Created by Amir on 3/28/2016 AD
@@ -22,7 +22,7 @@ public class NonTerminalRules {
         mNTRules.add(NTRule.makeRule(elements));
     }
 
-    static class NTRule {
+    public static class NTRule {
 
         String leftHandSide = null;
         ArrayList<String> rightHandSide = null;
@@ -55,21 +55,9 @@ public class NonTerminalRules {
         }
     }
 
-    public Cell createUnaryLexical(Cell c1) {
-        for (NTRule rule : mNTRules) {
-            if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.size() == 1) {
-                // matched rule
-                Cell cell = new Cell();
-                cell.pname = rule.leftHandSide;
-                return cell;
-            }
-        }
-        return null;
-    }
-
     public Cell createBinaryLexical(Cell c1, Cell c2) {
         for (NTRule rule : mNTRules) {
-            if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.size() > 1 && rule.rightHandSide.get(1).equals(c2.pname)) {
+            if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.get(1).equals(c2.pname)) {
                 // matched rule
                 Cell cell = new Cell();
                 cell.pname = rule.leftHandSide;

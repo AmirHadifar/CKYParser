@@ -1,4 +1,4 @@
-package net.hadifar;
+package net.hadifar.core;
 
 import java.util.ArrayList;
 
@@ -14,20 +14,28 @@ public class TerminalRules {
     public ArrayList<TRule> mTRules = null;
 
     public TerminalRules() {
-        mTRules = new ArrayList<TRule>();
+        mTRules = new ArrayList<>();
     }
 
     public void addRule(String[] elements) {
         mTRules.add(TRule.makeRule(elements));
     }
 
-    static class TRule {
+    public void addRule(ArrayList<TRule> mTRules) {
+        if (mTRules == null) {
+            mTRules = new ArrayList<>();
+        }
+        mTRules.addAll(mTRules);
+    }
+
+    public static class TRule {
 
         String leftHandSide = null;
         String rightHandSide = null;
         double probability = 0;
 
-        private TRule() {}
+        TRule() {
+        }
 
         public static TRule makeRule(String[] elements) {
             TRule rule = new TRule();
