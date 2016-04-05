@@ -16,8 +16,7 @@ public class CKYParser {
     private String[] mWords = null;
     private Cell[][] mTable = null;
 
-    private NonTerminalRules mNonTerminalRules = null;
-    private TerminalRules mTerminalRules = null;
+    private Grammar mGrammar = null;
 
     private int mWordTokens = 0;
 
@@ -27,15 +26,14 @@ public class CKYParser {
      * initialized terminal & non-terminals Objects
      */
     public CKYParser() {
-        mNonTerminalRules = new NonTerminalRules();
-        mTerminalRules = new TerminalRules();
+        mGrammar = new Grammar();
     }
 
     /**
      * Pass input sentence for splitting it to arrays of String
      * number of words also set to mWordTokens
      *
-     * @param sentence
+     * @param sentence input string
      */
     private void setSentence(String sentence) {
         mWords = sentence.split("\\s");
@@ -47,45 +45,46 @@ public class CKYParser {
      * build grammar with two ArrayList of terminal and non-terminal
      * set result to mTerminalRules & mNonTerminalRules objects
      *
-     * @param terminals
-     * @param nonTerminals
+     * @param terminals rules
+     * @param nonTerminals rules
      */
     public void buildGrammar(ArrayList<String> terminals, ArrayList<String> nonTerminals) {
 
         for (String terminalRule : terminals) {
             String[] splitWords = terminalRule.split("\\s");
-            mTerminalRules.addRule(splitWords);
+            mGrammar.addTerminalRule(splitWords);
         }
 
         for (String nonTerminalRule : nonTerminals) {
             String[] splitWords = nonTerminalRule.split("\\s");
-            mNonTerminalRules.addRule(splitWords);
+            mGrammar.addNonTerminalRule(splitWords);
         }
 
-        CFG2CNF(mTerminalRules, mNonTerminalRules);
+        CFG2CNF(mGrammar);
 
     }
 
     /**
      * Convert Context-free-grammar to Chomsky-normal-form
      * Just remove Union rules
+     *
      */
-    private void CFG2CNF(TerminalRules terminalRules, NonTerminalRules nonTerminalRules) {
+    private void CFG2CNF(Grammar grammar) {
 
         //two iterator for iterate terminals & non-terminals
-        ListIterator<NonTerminalRules.NTRule> ntRuleListIterator = nonTerminalRules.mNTRules.listIterator();
-        ListIterator<TerminalRules.TRule> tRuleListIterator = null;
+        ListIterator<Grammar.Rule> ntRuleListIterator = grammar.mNonTerminalRule.listIterator();
+        ListIterator<Grammar.Rule> tRuleListIterator;
 
         while (ntRuleListIterator.hasNext()) {
-            NonTerminalRules.NTRule nRule = ntRuleListIterator.next();
+            Grammar.Rule nRule = ntRuleListIterator.next();
             if (nRule.rightHandSide.size() == 1) {
-                tRuleListIterator = terminalRules.mTRules.listIterator();
+                tRuleListIterator = grammar.mTerminalRule.listIterator();
 
                 while (tRuleListIterator.hasNext()) {
-                    TerminalRules.TRule tRule = tRuleListIterator.next();
+                    Grammar.Rule tRule = tRuleListIterator.next();
                     if (nRule.rightHandSide.get(0).equals(tRule.leftHandSide)) {
                         String s = nRule.probability.multiply(tRule.probability).toString();
-                        tRuleListIterator.add(TerminalRules.TRule.makeRule(new String[]{s, nRule.leftHandSide, tRule.rightHandSide}));
+                        tRuleListIterator.add(Grammar.Rule.makeRule(new String[]{s, nRule.leftHandSide, tRule.rightHandSide.get(0)}));
                     }
                 }
                 ntRuleListIterator.remove();
@@ -97,7 +96,7 @@ public class CKYParser {
     /**
      * CKY algorithm , Take input sentence and run other part of PARSER
      *
-     * @param sentence
+     * @param sentence come from .txt
      */
     public void ckyAlgorithm(String sentence) {
         setSentence(sentence);
@@ -133,7 +132,7 @@ public class CKYParser {
 
             String word = mWords[i];
 
-            ArrayList<Cell> lexList = mTerminalRules.createLexical(word);
+            ArrayList<Cell> lexList = mGrammar.createUnaryRule(word);
             for (Cell lex : lexList) {
                 mTable[i][i].addEntry(lex, null, null);
             }
@@ -161,9 +160,9 @@ public class CKYParser {
     /**
      * Combine two Cell into one
      *
-     * @param i
-     * @param k
-     * @param j
+     * @param i start of span
+     * @param k indicator of span
+     * @param j end of span
      */
     private void combineCells(int i, int k, int j) {
 
@@ -180,7 +179,7 @@ public class CKYParser {
             for (Cell c2 : entries2) {
 
                 // find X in Nonterminal rules
-                Cell newCell = mNonTerminalRules.createBinaryLexical(c1, c2);
+                Cell newCell = mGrammar.createBinaryRule(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
                     // match
@@ -212,12 +211,13 @@ public class CKYParser {
     }
 
     /**
-     * put solution as StringBugger into sb
-     * @param sb
+     * Put solution as String into stringBuffer
+     *
+     * @param stringBuffer load result into into it
      */
-    public void getSolution(StringBuffer sb) {
+    public void getSolution(StringBuffer stringBuffer) {
         Cell endCell = mTable[0][mWordTokens - 1];
-        endCell.getSolution(sb);
+        endCell.getSolution(stringBuffer);
     }
 }
 
