@@ -55,7 +55,7 @@ public class Grammar {
 
     /**
      * If two Rule ( c1 , c2 ) match to our Non-Terminals list
-     * this function create new Cell
+     * this function create new Cell and return it
      *
      * @param c1 first rule
      * @param c2 second rule

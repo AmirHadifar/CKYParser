@@ -40,7 +40,6 @@ public class CKYMain {
 
             StringBuffer sb = new StringBuffer();
             parser.getSolution(sb);
-            String[] result = sb.toString().split("\n");
             System.out.println(sb.toString());
             FileUtils.WriteFile("penTreeBank.txt", sb.toString());
         }
