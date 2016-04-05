@@ -1,5 +1,7 @@
 package net.hadifar.core;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +28,14 @@ public class TerminalRules {
 
         String leftHandSide = null;
         String rightHandSide = null;
-        double probability = 0;
+        BigDecimal probability;
 
         TRule() {
         }
 
         public static TRule makeRule(String[] elements) {
             TRule rule = new TRule();
-            rule.probability = Double.parseDouble(elements[0]);
+            rule.probability = new BigDecimal(elements[0]);
             rule.leftHandSide = elements[1];
             rule.rightHandSide = elements[2];
             return rule;
@@ -50,6 +52,8 @@ public class TerminalRules {
                 Cell lex = new Cell();
                 lex.name = rule.rightHandSide;
                 lex.pname = rule.leftHandSide;
+                lex.probability = rule.probability;
+
                 lexs.add(lex);
             }
         }

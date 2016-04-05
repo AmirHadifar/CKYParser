@@ -8,7 +8,10 @@ package net.hadifar.core;
  */
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Cell {
@@ -17,7 +20,7 @@ public class Cell {
 
     public String pname = null;
     public String name = null;
-    public double probability = 0;
+    public BigDecimal probability = null;
 
     // back pointers
     public Cell left = null;
@@ -47,10 +50,20 @@ public class Cell {
     }
 
     public void getSolution(StringBuffer sb) {
+        //sort by their probability
+        Collections.sort(entries, new Comparator<Cell>() {
+            @Override
+            public int compare(Cell o1, Cell o2) {
+                if (o1.probability.doubleValue() < o2.probability.doubleValue())
+                    return 0;
+                else return -1;
+            }
+        });
+
         for (int i = 0; i < entries.size(); i++) {
             Cell entry = entries.get(i);
             entry.getTrace(sb);
-            sb.append("\n");
+            sb.append("\t" + entry.probability  + "\n");
         }
     }
 
