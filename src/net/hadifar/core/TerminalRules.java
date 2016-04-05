@@ -1,6 +1,7 @@
 package net.hadifar.core;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Amir on 3/28/2016 AD
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 
 public class TerminalRules {
 
-    public ArrayList<TRule> mTRules = null;
+    public List<TRule> mTRules = null;
 
     public TerminalRules() {
         mTRules = new ArrayList<>();
@@ -19,13 +20,6 @@ public class TerminalRules {
 
     public void addRule(String[] elements) {
         mTRules.add(TRule.makeRule(elements));
-    }
-
-    public void addRule(ArrayList<TRule> mTRules) {
-        if (mTRules == null) {
-            mTRules = new ArrayList<>();
-        }
-        mTRules.addAll(mTRules);
     }
 
     public static class TRule {
@@ -43,15 +37,6 @@ public class TerminalRules {
             rule.leftHandSide = elements[1];
             rule.rightHandSide = elements[2];
             return rule;
-        }
-
-        @Override
-        public String toString() {
-            StringBuffer ret = new StringBuffer();
-            ret.append(leftHandSide);
-            ret.append(" >> ");
-            ret.append(rightHandSide);
-            return ret.toString();
         }
     }
 

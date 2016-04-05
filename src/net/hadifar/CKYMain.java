@@ -28,22 +28,16 @@ public class CKYMain {
         CKYParser parser = new CKYParser();
         parser.buildGrammar(terminalRules, nonTerminalRules);
 
-
         //parse each sentence
         for (String sentence : inputSentence) {
 
-            parser.setSentence(sentence);
-
-            parser.initChart();
-
-            parser.fillChart();
-
-            parser.printChart();
+            parser.ckyAlgorithm(sentence);
 
             StringBuffer sb = new StringBuffer();
             parser.getSolution(sb);
+            String[] result = sb.toString().split("\n");
             System.out.println(sb.toString());
-//            FileUtils.WriteFile("output.txt", sb.toString());
+            FileUtils.WriteFile("penTreeBank.txt", sb.toString());
         }
     }
 }

@@ -9,39 +9,31 @@ package net.hadifar.core;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cell {
 
-    private ArrayList<Cell> entries = null;
+    private List<Cell> entries = null;
 
     public String pname = null;
     public String name = null;
+    public double probability = 0;
 
     // back pointers
     public Cell left = null;
     public Cell right = null;
 
     public Cell() {
-        entries = new ArrayList<Cell>();
+        entries = new ArrayList<>();
     }
 
     public void addEntry(Cell cell, Cell left, Cell right) {
         cell.left = left;
         cell.right = right;
         entries.add(cell);
-//        addUnique(cell);
-    }
-//
-    private void addUnique(Cell cell) {
-        for (Cell c : entries) {
-            if (c.pname.equals(cell.pname)) {
-                return;
-            }
-        }
-        entries.add(cell);
     }
 
-    public ArrayList<Cell> getEntries() {
+    public List<Cell> getEntries() {
         return entries;
     }
 
@@ -54,31 +46,12 @@ public class Cell {
         return ret.toString();
     }
 
-    public void printSolution() {
-        for (int i = 0; i < entries.size(); i++) {
-            Cell entry = entries.get(i);
-            entry.printTrace();
-            System.out.println();
-        }
-    }
-
     public void getSolution(StringBuffer sb) {
         for (int i = 0; i < entries.size(); i++) {
             Cell entry = entries.get(i);
             entry.getTrace(sb);
             sb.append("\n");
         }
-    }
-
-    public void printTrace() {
-        System.out.print("(" + pname);
-        if (left != null) {
-            left.printTrace();
-            right.printTrace();
-        } else {
-            System.out.print(" " + name);
-        }
-        System.out.print(")");
     }
 
     public void getTrace(StringBuffer sb) {

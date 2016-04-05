@@ -9,10 +9,11 @@ package net.hadifar.core;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NonTerminalRules {
 
-    public ArrayList<NTRule> mNTRules = null;
+    public List<NTRule> mNTRules = null;
 
     public NonTerminalRules() {
         mNTRules = new ArrayList<NTRule>();
@@ -41,17 +42,6 @@ public class NonTerminalRules {
                 rule.rightHandSide.add(elements[i]);
             }
             return rule;
-        }
-
-        @Override
-        public String toString() {
-            StringBuffer ret = new StringBuffer();
-            ret.append(leftHandSide);
-            ret.append(" >> ");
-            for (String s : rightHandSide) {
-                ret.append(s + " ");
-            }
-            return ret.toString();
         }
     }
 
