@@ -14,8 +14,13 @@ import java.util.ArrayList;
 
 public class CKYMain {
 
+    /**
+     * Take 3 .txt file as Input and then
+     * Create Parser and pass nonTerminal & Terminal rule as arg to buildGrammar function
+     * for each sentence in your input.txt it calls parser.ckyAlgorithm
+     * At the end write result in penTreeBank.txt file
+     */
     public static void main(String args[]) {
-
 
         //read input sentence
         ArrayList<String> inputSentence = FileUtils.readFile("input.txt");

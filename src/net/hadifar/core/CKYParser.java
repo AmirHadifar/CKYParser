@@ -8,11 +8,13 @@ package net.hadifar.core;
  */
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class CKYParser {
 
     private String[] mWords = null;
-    private Cell[][] mChart = null;
+    private Cell[][] mTable = null;
 
     private NonTerminalRules mNonTerminalRules = null;
     private TerminalRules mTerminalRules = null;
@@ -35,7 +37,7 @@ public class CKYParser {
      *
      * @param sentence
      */
-    public void setSentence(String sentence) {
+    private void setSentence(String sentence) {
         mWords = sentence.split("\\s");
         mWordTokens = this.mWords.length;
     }
@@ -68,53 +70,54 @@ public class CKYParser {
      * Convert Context-free-grammar to Chomsky-normal-form
      * Just remove Union rules
      */
-    private void CFG2CNF(TerminalRules mTerminalRules, NonTerminalRules mNonTerminalRules) {
+    private void CFG2CNF(TerminalRules terminalRules, NonTerminalRules nonTerminalRules) {
 
-        //new rules which added to terminals
-        ArrayList<TerminalRules.TRule> newAddedRule = new ArrayList<>();
-        ArrayList<NonTerminalRules.NTRule> newDeleteRule = new ArrayList<>();
+        //two iterator for iterate terminals & non-terminals
+        ListIterator<NonTerminalRules.NTRule> ntRuleListIterator = nonTerminalRules.mNTRules.listIterator();
+        ListIterator<TerminalRules.TRule> tRuleListIterator = null;
 
-        //iterate through non-terminals to find union-Rules
-        for (NonTerminalRules.NTRule nRule : mNonTerminalRules.mNTRules) {
-            //find union
+        while (ntRuleListIterator.hasNext()) {
+            NonTerminalRules.NTRule nRule = ntRuleListIterator.next();
             if (nRule.rightHandSide.size() == 1) {
-                //replace all variant of rule with Terminals and added to newAddedRule
-                for (TerminalRules.TRule tRule : mTerminalRules.mTRules) {
-                    if (nRule.rightHandSide.get(0).equals(tRule.leftHandSide))
-                        newAddedRule.add(TerminalRules.TRule.makeRule(new String[]{"" + nRule.probability * tRule.probability, nRule.leftHandSide, tRule.rightHandSide}));
+                tRuleListIterator = terminalRules.mTRules.listIterator();
+
+                while (tRuleListIterator.hasNext()) {
+                    TerminalRules.TRule tRule = tRuleListIterator.next();
+                    if (nRule.rightHandSide.get(0).equals(tRule.leftHandSide)) {
+                        String s = nRule.probability.multiply(tRule.probability).toString();
+                        tRuleListIterator.add(TerminalRules.TRule.makeRule(new String[]{s, nRule.leftHandSide, tRule.rightHandSide}));
+                    }
                 }
-                //new delete rule added to deleted list
-                newDeleteRule.add(nRule);
+                ntRuleListIterator.remove();
             }
         }
-
-        //Union deleted && new Rules added
-        mTerminalRules.mTRules.addAll(newAddedRule);
-        mNonTerminalRules.mNTRules.removeAll(newDeleteRule);
     }
 
 
     /**
-     * initializing table/chart of CKYParser with following structure
-     * <p>
-     * sentence : $$$$$$
-     * $$$$$$
-     * $$$$$
-     * $$$$
-     * $$$
-     * $$
-     * $
+     * CKY algorithm , Take input sentence and run other part of PARSER
+     *
+     * @param sentence
      */
-    public void initChart() {
+    public void ckyAlgorithm(String sentence) {
+        setSentence(sentence);
+        initTable();
+        fillTable();
+    }
 
-        mChart = new Cell[mWordTokens][];
+    /**
+     * Initializing table of CKYParser with following structure
+     */
+    private void initTable() {
+
+        mTable = new Cell[mWordTokens][];
 
         for (int i = 0; i < mWordTokens; i++) {
 
-            mChart[i] = new Cell[mWordTokens];
+            mTable[i] = new Cell[mWordTokens];
 
             for (int j = i; j < mWordTokens; j++) {
-                mChart[i][j] = new Cell();
+                mTable[i][j] = new Cell();
             }
         }
 
@@ -122,7 +125,7 @@ public class CKYParser {
     }
 
     /**
-     * initialize entries of table/chart with words of sentence
+     * Initialize entries of table with words of sentence
      */
     private void initCell() {
 
@@ -132,37 +135,46 @@ public class CKYParser {
 
             ArrayList<Cell> lexList = mTerminalRules.createLexical(word);
             for (Cell lex : lexList) {
-                mChart[i][i].addEntry(lex, null, null);
+                mTable[i][i].addEntry(lex, null, null);
             }
         }
-
-
     }
 
-    public void fillChart() {
+    /**
+     * CKY Algorithm
+     */
+    private void fillTable() {
 
-        for (int length = 1; length < mWordTokens; length++) {
+        for (int length = 1; length < mWordTokens; length++) { // length of span
 
-            for (int i = 0; i < mWordTokens - length; i++) {
+            for (int i = 0; i < mWordTokens - length; i++) { //start of span
 
                 for (int k = i; k < i + length; k++) {
                     combineCells(i, k, i + length);
                 }
             }
         }
+
     }
 
 
+    /**
+     * Combine two Cell into one
+     *
+     * @param i
+     * @param k
+     * @param j
+     */
     private void combineCells(int i, int k, int j) {
 
-        Cell cell1 = mChart[i][k];
-        ArrayList<Cell> entries1 = cell1.getEntries();
+        Cell cell1 = mTable[i][k];
+        List<Cell> entries1 = cell1.getEntries();
 
         // find Y in cell[i][k]
         for (Cell c1 : entries1) {
 
-            Cell cell2 = mChart[k + 1][j];
-            ArrayList<Cell> entries2 = cell2.getEntries();
+            Cell cell2 = mTable[k + 1][j];
+            List<Cell> entries2 = cell2.getEntries();
 
             // find Z in cell[k+1][j]
             for (Cell c2 : entries2) {
@@ -171,27 +183,27 @@ public class CKYParser {
                 Cell newCell = mNonTerminalRules.createBinaryLexical(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
-                    System.out.println("find: " + c1.pname + " + " + c2.pname);
-
                     // match
                     // addToCell(cell[i][j], X, Y, Z)
-                    mChart[i][j].addEntry(newCell, c1, c2);
+                    mTable[i][j].addEntry(newCell, c1, c2);
                 }
             }
         }
 
     }
 
-    public void printChart() {
+    /**
+     * This is function print whole Table visually
+     */
+    public void printTable() {
 
-        System.out.println("\n-- Recognition Chart --");
 
         for (int i = 0; i < mWordTokens; i++) {
             for (int j = 0; j < mWordTokens; j++) {
                 if (j < i) {
                     System.out.print("\t");
                 } else {
-                    System.out.print(mChart[i][j].toString() + "\t");
+                    System.out.print(mTable[i][j].toString() + "\t");
                 }
             }
             System.out.println();
@@ -199,9 +211,13 @@ public class CKYParser {
 
     }
 
+    /**
+     * put solution as StringBugger into sb
+     * @param sb
+     */
     public void getSolution(StringBuffer sb) {
-        Cell fin = mChart[0][mWordTokens - 1];
-        fin.getSolution(sb);
+        Cell endCell = mTable[0][mWordTokens - 1];
+        endCell.getSolution(sb);
     }
 }
 
