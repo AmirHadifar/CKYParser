@@ -49,6 +49,7 @@ public class Cell {
         return ret.toString();
     }
 
+
     public void getSolution(StringBuffer sb) {
         //sort by their probability
         Collections.sort(entries, new Comparator<Cell>() {

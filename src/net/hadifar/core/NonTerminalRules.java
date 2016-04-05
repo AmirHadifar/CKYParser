@@ -46,6 +46,13 @@ public class NonTerminalRules {
         }
     }
 
+    /**
+     * If two Rule ( c1 , c2 ) match to our Non-Terminals list
+     * this function create new Cell
+     * @param c1
+     * @param c2
+     * @return
+     */
     public Cell createBinaryLexical(Cell c1, Cell c2) {
         for (NTRule rule : mNTRules) {
             if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.get(1).equals(c2.pname)) {

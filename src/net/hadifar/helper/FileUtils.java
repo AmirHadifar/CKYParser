@@ -52,7 +52,7 @@ public class FileUtils {
     }
 
     /**
-     * write output text to file (e.g output.txt)
+     * write output text to file (e.g penTreeBank.txt)
      *
      * @param fileNm
      * @param text

@@ -1,7 +1,6 @@
 package net.hadifar.core;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,6 @@ public class TerminalRules {
             return rule;
         }
     }
-
 
     public ArrayList<Cell> createLexical(String word) {
 
