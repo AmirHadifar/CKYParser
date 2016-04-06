@@ -1,0 +1,6 @@
+(S(NP I)(VP(VP gave)(NP(Det the)(NP(N library)(N books)))))	0.00007680
+(S(NP I)(VP(VP(VP gave)(NP(Det the)(N library)))(NP books)))	0.000015360
+(S(NP I)(VP(VP gave)(NP(NP(Det the)(N library))(NP books))))	0.000015360
+(S(NP I)(VP(VP(VP gave)(NP(Det the)(NP library)))(NP books)))	0.0000030720
+(S(NP I)(VP(VP gave)(NP(NP(Det the)(NP library))(NP books))))	0.0000030720
+(S(NP I)(VP(VP gave)(NP(Det the)(NP(NP library)(NP books)))))	0.0000030720

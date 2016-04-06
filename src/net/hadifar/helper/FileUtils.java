@@ -14,7 +14,7 @@ public class FileUtils {
     /**
      * read input text from file (e.g input.txt)
      *
-     * @param fileNm name of the input file
+     * @param fileNm terminalSymbol of the input file
      * @return Arrays of String separated by newLine
      */
     public static ArrayList<String> readFile(String fileNm) {
@@ -56,7 +56,7 @@ public class FileUtils {
     /**
      * write output text to file (e.g penTreeBank.txt)
      *
-     * @param fileNm name of output file
+     * @param fileNm terminalSymbol of output file
      * @param text written text
      */
     public static void WriteFile(String fileNm, String text) {

@@ -18,8 +18,8 @@ public class Cell {
 
     private List<Cell> entries = null;
 
-    public String pname = null;
-    public String name = null;
+    public String nonTerminalSymbol = null;
+    public String terminalSymbol = null;
     public BigDecimal probability = null;
 
     // back pointers
@@ -44,7 +44,7 @@ public class Cell {
     public String toString() {
         StringBuffer ret = new StringBuffer();
         for (Cell entry : entries) {
-            ret.append(entry.pname + ",");
+            ret.append(entry.nonTerminalSymbol + ",");
         }
         return ret.toString();
     }
@@ -69,12 +69,12 @@ public class Cell {
     }
 
     public void getTrace(StringBuffer sb) {
-        sb.append("(" + pname);
+        sb.append("(" + nonTerminalSymbol);
         if (left != null) {
             left.getTrace(sb);
             right.getTrace(sb);
         } else {
-            sb.append(" " + name);
+            sb.append(" " + terminalSymbol);
         }
         sb.append(")");
     }

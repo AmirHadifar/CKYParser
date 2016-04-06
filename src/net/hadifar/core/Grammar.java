@@ -63,9 +63,9 @@ public class Grammar {
      */
     public Cell createBinaryRule(Cell c1, Cell c2) {
         for (Rule rule : mNonTerminalRule) {
-            if (rule.rightHandSide.get(0).equals(c1.pname) && rule.rightHandSide.get(1).equals(c2.pname)) {
+            if (rule.rightHandSide.get(0).equals(c1.nonTerminalSymbol) && rule.rightHandSide.get(1).equals(c2.nonTerminalSymbol)) {
                 Cell cell = new Cell();
-                cell.pname = rule.leftHandSide;
+                cell.nonTerminalSymbol = rule.leftHandSide;
                 cell.probability = c1.probability.multiply(c2.probability);
                 return cell;
             }
@@ -86,8 +86,8 @@ public class Grammar {
         for (Rule rule : mTerminalRule) {
             if (rule.rightHandSide.get(0).equals(word)) {
                 Cell lex = new Cell();
-                lex.name = rule.rightHandSide.get(0);
-                lex.pname = rule.leftHandSide;
+                lex.terminalSymbol = rule.rightHandSide.get(0);
+                lex.nonTerminalSymbol = rule.leftHandSide;
                 lex.probability = rule.probability;
 
                 equavalentUnaryRule.add(lex);
