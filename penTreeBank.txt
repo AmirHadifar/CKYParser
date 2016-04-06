@@ -1,4 +1,0 @@
-(S(NP I)(VP(VP made)(NP(Pron her)(N duck))))	0.0002880
-(S(NP I)(VP(VP made)(NP(N her)(N duck))))	0.00002880
-(S(NP I)(VP(VP(VP made)(NP her))(NP duck)))	0.0000011520
-(S(NP I)(VP(VP made)(NP(NP her)(NP duck))))	0.0000011520

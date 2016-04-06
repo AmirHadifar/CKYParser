@@ -14,8 +14,8 @@ public class FileUtils {
     /**
      * read input text from file (e.g input.txt)
      *
-     * @param fileNm
-     * @return
+     * @param fileNm name of the input file
+     * @return Arrays of String separated by newLine
      */
     public static ArrayList<String> readFile(String fileNm) {
         ArrayList<String> lines = null;
@@ -25,9 +25,9 @@ public class FileUtils {
         try {
             fr = new FileReader(new File(fileNm));
             br = new BufferedReader(fr);
-            lines = new ArrayList<String>();
+            lines = new ArrayList<>();
 
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 lines.add(line);
             }
@@ -38,13 +38,15 @@ public class FileUtils {
             if (fr != null)
                 try {
                     fr.close();
-                } catch (Exception ex) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             if (br != null)
                 try {
                     br.close();
-                } catch (Exception ex) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
         }
 
@@ -54,8 +56,8 @@ public class FileUtils {
     /**
      * write output text to file (e.g penTreeBank.txt)
      *
-     * @param fileNm
-     * @param text
+     * @param fileNm name of output file
+     * @param text written text
      */
     public static void WriteFile(String fileNm, String text) {
         FileWriter fw = null;
@@ -73,15 +75,15 @@ public class FileUtils {
             if (fw != null)
                 try {
                     fw.close();
-                } catch (Exception ex) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            ;
             if (bw != null)
                 try {
                     bw.close();
-                } catch (Exception ex) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            ;
         }
     }
 }
