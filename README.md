@@ -9,7 +9,9 @@ You can find good article about Algorithm [here][1], [here][2] & [here][3]
 
 Use
 -------
-It take three .txt file and output result in **PenTreeBank** format. (you can also print it as Table by using printTable)
+It take three .txt file as input and write output result in **PenTreeBank** format.
+
+(you can also print it as Table by using **parser.printTable**)
 
 **input.txt** file for your sentence which you want to parse.
 
