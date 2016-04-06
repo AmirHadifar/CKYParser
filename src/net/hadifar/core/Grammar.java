@@ -22,10 +22,18 @@ public class Grammar {
         mTerminalRule = new ArrayList<>();
     }
 
+    /**
+     * add raw input data to our non-terminal's List
+     * @param elements array of string contains probability , leftHandSide rule , rightHandSide rule(s)
+     */
     public void addNonTerminalRule(String[] elements) {
         mNonTerminalRule.add(Rule.makeRule(elements));
     }
 
+    /**
+     * add raw input data to our terminal's List
+     * @param elements array of string contains probability , leftHandSide rule , rightHandSide rule
+     */
     public void addTerminalRule(String[] elements) {
         mTerminalRule.add(Rule.makeRule(elements));
     }

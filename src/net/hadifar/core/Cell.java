@@ -30,6 +30,12 @@ public class Cell {
         entries = new ArrayList<>();
     }
 
+    /**
+     * each Cell may contains several rule , So define entries to handle this
+     * @param cell newly added
+     * @param left
+     * @param right
+     */
     public void addEntry(Cell cell, Cell left, Cell right) {
         cell.left = left;
         cell.right = right;
@@ -50,6 +56,10 @@ public class Cell {
     }
 
 
+    /**
+     * Sort solution by probability and return it as StringBuffer
+     * @param sb
+     */
     public void getSolution(StringBuffer sb) {
         //sort by their probability
         Collections.sort(entries, new Comparator<Cell>() {
@@ -68,6 +78,10 @@ public class Cell {
         }
     }
 
+    /**
+     * Print solution in PenTreeBank format
+     * @param sb
+     */
     public void getTrace(StringBuffer sb) {
         sb.append("(" + nonTerminalSymbol);
         if (left != null) {
