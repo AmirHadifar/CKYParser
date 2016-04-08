@@ -71,25 +71,9 @@ public class CKYParser {
      */
     private void CFG2CNF(Grammar grammar) {
 
+        //TODO: remove epsilon rules & rules with more that two characters in rightHandSide
         //two iterator for iterate terminals & non-terminals
-        ListIterator<Grammar.Rule> ntRuleListIterator = grammar.mNonTerminalRule.listIterator();
-        ListIterator<Grammar.Rule> tRuleListIterator;
 
-        while (ntRuleListIterator.hasNext()) {
-            Grammar.Rule nRule = ntRuleListIterator.next();
-            if (nRule.rightHandSide.size() == 1) {
-                tRuleListIterator = grammar.mTerminalRule.listIterator();
-
-                while (tRuleListIterator.hasNext()) {
-                    Grammar.Rule tRule = tRuleListIterator.next();
-                    if (nRule.rightHandSide.get(0).equals(tRule.leftHandSide)) {
-                        String s = nRule.probability.multiply(tRule.probability).toString();
-                        tRuleListIterator.add(Grammar.Rule.makeRule(new String[]{s, nRule.leftHandSide, tRule.rightHandSide.get(0)}));
-                    }
-                }
-                ntRuleListIterator.remove();
-            }
-        }
     }
 
 
