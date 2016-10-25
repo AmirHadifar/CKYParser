@@ -3,7 +3,7 @@
 
 **CKY Parser | PCFG | Statistical Parser**
 
-This is a simple project for **NLP** courses. It's written with Java 1.8 and compiled with Intellij (C.E 2016)
+This is a simple project for **NLP** courses (Dr.Momtazi). It's written with Java 1.8 and compiled with Intellij (C.E 2016)
 
 You can find good article about Algorithm [here][1], [here][2] & [here][3]
 
