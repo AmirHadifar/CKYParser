@@ -2,7 +2,7 @@ package net.hadifar.core;
 
 /**
  * Created by Amir on 3/28/2016 AD
- * Project : CKYParser
+ * Project : CkyParser
  * GitHub  : @AmirHadifar
  * Twitter : @AmirHadifar
  */
@@ -12,30 +12,33 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grammar {
+class Grammar {
 
-    public List<Rule> mNonTerminalRule = null;
-    public List<Rule> mTerminalRule = null;
+    private List<Rule> nonTerminalRule = null;
+    private List<Rule> terminalRule = null;
 
-    public Grammar() {
-        mNonTerminalRule = new ArrayList<>();
-        mTerminalRule = new ArrayList<>();
+
+    Grammar() {
+        nonTerminalRule = new ArrayList<>();
+        terminalRule = new ArrayList<>();
     }
 
     /**
      * add raw input data to our non-terminal's List
+     *
      * @param elements array of string contains probability , leftHandSide rule , rightHandSide rule(s)
      */
     public void addNonTerminalRule(String[] elements) {
-        mNonTerminalRule.add(Rule.makeRule(elements));
+        nonTerminalRule.add(Rule.makeRule(elements));
     }
 
     /**
      * add raw input data to our terminal's List
+     *
      * @param elements array of string contains probability , leftHandSide rule , rightHandSide rule
      */
     public void addTerminalRule(String[] elements) {
-        mTerminalRule.add(Rule.makeRule(elements));
+        terminalRule.add(Rule.makeRule(elements));
     }
 
     public static class Rule {
@@ -70,11 +73,11 @@ public class Grammar {
      * @return if find any matched non-terminal rules , create new Cell and return it
      */
     public Cell createBinaryRule(Cell c1, Cell c2) {
-        for (Rule rule : mNonTerminalRule) {
-            if (rule.rightHandSide.get(0).equals(c1.nonTerminalSymbol) && rule.rightHandSide.get(1).equals(c2.nonTerminalSymbol)) {
+        for (Rule rule : nonTerminalRule) {
+            if (rule.rightHandSide.get(0).equals(c1.getNonTerminalSymbol()) && rule.rightHandSide.get(1).equals(c2.getNonTerminalSymbol())) {
                 Cell cell = new Cell();
-                cell.nonTerminalSymbol = rule.leftHandSide;
-                cell.probability = c1.probability.multiply(c2.probability);
+                cell.setNonTerminalSymbol(rule.leftHandSide);
+                cell.setProbability(c1.getProbability().multiply(c2.getProbability()));
                 return cell;
             }
         }
@@ -84,6 +87,7 @@ public class Grammar {
 
     /**
      * Create unary rule if find it in terminal rules
+     *
      * @param word of our input sentence
      * @return if find any matched terminal rules , create new Cell and return it
      */
@@ -91,12 +95,12 @@ public class Grammar {
 
         ArrayList<Cell> equavalentUnaryRule = new ArrayList<>();
 
-        for (Rule rule : mTerminalRule) {
+        for (Rule rule : terminalRule) {
             if (rule.rightHandSide.get(0).equals(word)) {
                 Cell lex = new Cell();
-                lex.terminalSymbol = rule.rightHandSide.get(0);
-                lex.nonTerminalSymbol = rule.leftHandSide;
-                lex.probability = rule.probability;
+                lex.setTerminalSymbol(rule.rightHandSide.get(0));
+                lex.setNonTerminalSymbol(rule.leftHandSide);
+                lex.setProbability(rule.probability);
 
                 equavalentUnaryRule.add(lex);
             }
@@ -104,5 +108,20 @@ public class Grammar {
         return equavalentUnaryRule;
     }
 
+    public List<Rule> getNonTerminalRule() {
+        return nonTerminalRule;
+    }
+
+    public void setNonTerminalRule(List<Rule> nonTerminalRule) {
+        this.nonTerminalRule = nonTerminalRule;
+    }
+
+    public List<Rule> getTerminalRule() {
+        return terminalRule;
+    }
+
+    public void setTerminalRule(List<Rule> terminalRule) {
+        this.terminalRule = terminalRule;
+    }
 }
 

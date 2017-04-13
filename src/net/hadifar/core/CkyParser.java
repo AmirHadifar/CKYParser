@@ -2,7 +2,7 @@ package net.hadifar.core;
 
 /**
  * Created by Amir on 3/28/2016 AD
- * Project : CKYParser
+ * Project : CkyParser
  * GitHub  : @AmirHadifar
  * Twitter : @AmirHadifar
  */
@@ -11,33 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class CKYParser {
+public class CkyParser {
 
-    private String[] mWords = null;
-    private Cell[][] mTable = null;
+    private String[] words = null;
+    private Cell[][] table = null;
 
-    private Grammar mGrammar = null;
+    private Grammar grammar = null;
 
-    private int mWordTokens = 0;
+    private int wordTokens = 0;
 
 
     /**
-     * default constructor for CKYParser
+     * default constructor for CkyParser
      * initialized terminal & non-terminals Objects
      */
-    public CKYParser() {
-        mGrammar = new Grammar();
+    public CkyParser() {
+        grammar = new Grammar();
     }
 
     /**
      * Pass input sentence for splitting it to arrays of String
-     * number of words also set to mWordTokens
+     * number of words also set to wordTokens
      *
      * @param sentence input string
      */
     private void setSentence(String sentence) {
-        mWords = sentence.split("\\s");
-        mWordTokens = this.mWords.length;
+        words = sentence.split("\\s");
+        wordTokens = this.words.length;
     }
 
 
@@ -45,41 +45,40 @@ public class CKYParser {
      * build grammar with two ArrayList of terminal and non-terminal
      * set result to mTerminalRules & mNonTerminalRules objects
      *
-     * @param terminals rules
+     * @param terminals    rules
      * @param nonTerminals rules
      */
     public void buildGrammar(ArrayList<String> terminals, ArrayList<String> nonTerminals) {
 
         for (String terminalRule : terminals) {
             String[] splitWords = terminalRule.split("\\s");
-            mGrammar.addTerminalRule(splitWords);
+            grammar.addTerminalRule(splitWords);
         }
 
         for (String nonTerminalRule : nonTerminals) {
             String[] splitWords = nonTerminalRule.split("\\s");
-            mGrammar.addNonTerminalRule(splitWords);
+            grammar.addNonTerminalRule(splitWords);
         }
 
-        CFG2CNF(mGrammar);
+        CFG2CNF(grammar);
 
     }
 
     /**
      * Convert Context-free-grammar to Chomsky-normal-form
      * Just remove Union rules
-     *
      */
     private void CFG2CNF(Grammar grammar) {
 
         //TODO: remove epsilon rules & rules with more that two characters in rightHandSide
         //two iterator for iterate terminals & non-terminals
-        ListIterator<Grammar.Rule> ntRuleListIterator = grammar.mNonTerminalRule.listIterator();
+        ListIterator<Grammar.Rule> ntRuleListIterator = grammar.getNonTerminalRule().listIterator();
         ListIterator<Grammar.Rule> tRuleListIterator;
 
         while (ntRuleListIterator.hasNext()) {
             Grammar.Rule nRule = ntRuleListIterator.next();
             if (nRule.rightHandSide.size() == 1) {
-                tRuleListIterator = grammar.mTerminalRule.listIterator();
+                tRuleListIterator = grammar.getTerminalRule().listIterator();
 
                 while (tRuleListIterator.hasNext()) {
                     Grammar.Rule tRule = tRuleListIterator.next();
@@ -106,18 +105,18 @@ public class CKYParser {
     }
 
     /**
-     * Initializing table of CKYParser with following structure
+     * Initializing table of CkyParser with following structure
      */
     private void initTable() {
 
-        mTable = new Cell[mWordTokens][];
+        table = new Cell[wordTokens][];
 
-        for (int i = 0; i < mWordTokens; i++) {
+        for (int i = 0; i < wordTokens; i++) {
 
-            mTable[i] = new Cell[mWordTokens];
+            table[i] = new Cell[wordTokens];
 
-            for (int j = i; j < mWordTokens; j++) {
-                mTable[i][j] = new Cell();
+            for (int j = i; j < wordTokens; j++) {
+                table[i][j] = new Cell();
             }
         }
 
@@ -129,13 +128,13 @@ public class CKYParser {
      */
     private void initCell() {
 
-        for (int i = 0; i < mWordTokens; i++) {
+        for (int i = 0; i < wordTokens; i++) {
 
-            String word = mWords[i];
+            String word = words[i];
 
-            ArrayList<Cell> lexList = mGrammar.createUnaryRule(word);
+            ArrayList<Cell> lexList = grammar.createUnaryRule(word);
             for (Cell lex : lexList) {
-                mTable[i][i].addEntry(lex, null, null);
+                table[i][i].addEntry(lex, null, null);
             }
         }
     }
@@ -145,9 +144,9 @@ public class CKYParser {
      */
     private void fillTable() {
 
-        for (int length = 1; length < mWordTokens; length++) { // length of span
+        for (int length = 1; length < wordTokens; length++) { // length of span
 
-            for (int i = 0; i < mWordTokens - length; i++) { //start of span
+            for (int i = 0; i < wordTokens - length; i++) { //start of span
 
                 for (int k = i; k < i + length; k++) {
                     combineCells(i, k, i + length);
@@ -167,25 +166,25 @@ public class CKYParser {
      */
     private void combineCells(int i, int k, int j) {
 
-        Cell cell1 = mTable[i][k];
+        Cell cell1 = table[i][k];
         List<Cell> entries1 = cell1.getEntries();
 
         // find Y in cell[i][k]
         for (Cell c1 : entries1) {
 
-            Cell cell2 = mTable[k + 1][j];
+            Cell cell2 = table[k + 1][j];
             List<Cell> entries2 = cell2.getEntries();
 
             // find Z in cell[k+1][j]
             for (Cell c2 : entries2) {
 
                 // find X in Nonterminal rules
-                Cell newCell = mGrammar.createBinaryRule(c1, c2);
+                Cell newCell = grammar.createBinaryRule(c1, c2);
                 // if X -> Y Z in Rules
                 if (newCell != null) {
                     // match
                     // addToCell(cell[i][j], X, Y, Z)
-                    mTable[i][j].addEntry(newCell, c1, c2);
+                    table[i][j].addEntry(newCell, c1, c2);
                 }
             }
         }
@@ -198,12 +197,12 @@ public class CKYParser {
     public void printTable() {
 
 
-        for (int i = 0; i < mWordTokens; i++) {
-            for (int j = 0; j < mWordTokens; j++) {
+        for (int i = 0; i < wordTokens; i++) {
+            for (int j = 0; j < wordTokens; j++) {
                 if (j < i) {
                     System.out.print("\t");
                 } else {
-                    System.out.print(mTable[i][j].toString() + "\t");
+                    System.out.print(table[i][j].toString() + "\t");
                 }
             }
             System.out.println();
@@ -217,7 +216,7 @@ public class CKYParser {
      * @param stringBuffer load result into into it
      */
     public void getSolution(StringBuffer stringBuffer) {
-        Cell endCell = mTable[0][mWordTokens - 1];
+        Cell endCell = table[0][wordTokens - 1];
         endCell.getSolution(stringBuffer);
     }
 }

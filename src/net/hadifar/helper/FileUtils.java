@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Amir on 3/28/2016 AD
- * Project : CKYParser
+ * Project : CkyParser
  * GitHub  : @AmirHadifar
  * Twitter : @AmirHadifar
  */

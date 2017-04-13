@@ -2,7 +2,7 @@ package net.hadifar.core;
 
 /**
  * Created by Amir on 3/28/2016 AD
- * Project : CKYParser
+ * Project : CkyParser
  * GitHub  : @AmirHadifar
  * Twitter : @AmirHadifar
  */
@@ -18,13 +18,13 @@ public class Cell {
 
     private List<Cell> entries = null;
 
-    public String nonTerminalSymbol = null;
-    public String terminalSymbol = null;
-    public BigDecimal probability = null;
+    private String nonTerminalSymbol = null;
+    private String terminalSymbol = null;
+    private BigDecimal probability = null;
 
     // back pointers
-    public Cell left = null;
-    public Cell right = null;
+    private Cell left = null;
+    private Cell right = null;
 
     public Cell() {
         entries = new ArrayList<>();
@@ -91,6 +91,50 @@ public class Cell {
             sb.append(" " + terminalSymbol);
         }
         sb.append(")");
+    }
+
+    public void setEntries(List<Cell> entries) {
+        this.entries = entries;
+    }
+
+    public String getNonTerminalSymbol() {
+        return nonTerminalSymbol;
+    }
+
+    public void setNonTerminalSymbol(String nonTerminalSymbol) {
+        this.nonTerminalSymbol = nonTerminalSymbol;
+    }
+
+    public String getTerminalSymbol() {
+        return terminalSymbol;
+    }
+
+    public void setTerminalSymbol(String terminalSymbol) {
+        this.terminalSymbol = terminalSymbol;
+    }
+
+    public BigDecimal getProbability() {
+        return probability;
+    }
+
+    public void setProbability(BigDecimal probability) {
+        this.probability = probability;
+    }
+
+    public Cell getLeft() {
+        return left;
+    }
+
+    public void setLeft(Cell left) {
+        this.left = left;
+    }
+
+    public Cell getRight() {
+        return right;
+    }
+
+    public void setRight(Cell right) {
+        this.right = right;
     }
 }
 

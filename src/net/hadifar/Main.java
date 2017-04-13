@@ -2,17 +2,17 @@ package net.hadifar;
 
 /**
  * Created by Amir on 3/28/2016 AD
- * Project : CKYParser
+ * Project : CkyParser
  * GitHub  : @AmirHadifar
  * Twitter : @AmirHadifar
  */
 
-import net.hadifar.core.CKYParser;
+import net.hadifar.core.CkyParser;
 import net.hadifar.helper.FileUtils;
 
 import java.util.ArrayList;
 
-public class CKYMain {
+public class Main {
 
     /**
      * Take 3 .txt file as Input and then
@@ -30,7 +30,7 @@ public class CKYMain {
         ArrayList<String> nonTerminalRules = FileUtils.readFile("NT-Rules.txt");
 
         //initialize parser & build grammar from our rules
-        CKYParser parser = new CKYParser();
+        CkyParser parser = new CkyParser();
         parser.buildGrammar(terminalRules, nonTerminalRules);
 
         //parse each sentence
